@@ -103,9 +103,9 @@ def signUp():
 @app.route('/signup', methods =['GET','POST'])
 def signup_post():
     username = request.form['uname']
-    password = request.form['password']
+    password = request.form['upassword']
     name     = request.form['name']
-    email    = request.form['email']
+    email    = request.form['uemail']
 
     if username and password and name and email:
         # Checks if user already exists, if so, don't allow them to register with same name
@@ -118,10 +118,6 @@ def signup_post():
             flash('Email already being used: login or use a different email')
             return render_template('signup.html')
 
-        # Checks if phone number in use, is so, login
-        if Customer.query.filter_by(c_custPhoneNumber = phone).first():
-            flash('Phone number already being used, please login')
-            return render_template('signup.html')
     else:
         flash('Fill in the form')
         return render_template('signup.html')

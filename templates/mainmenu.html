@@ -8,5 +8,28 @@
 </head>  
 
 <body>
+<div class="intro">
 <h1>BeWell</h1>
+
+<div class = "form_container">
+    <form method="POST" action="{{url_for('login_post')}}">
+        <label for="uname">Username:</label><br>
+        <input type="text" id="uname" name="uname"><br>
+        <label for="uname">Password:</label><br>
+        <input type="password" id="password" name="password"><br>
+        <a href=/signup><button type=”button”>Sign Up</button></a> 
+        <input type="submit" value="Log In">
+    </form>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</div>
+</div>
+
 </body>

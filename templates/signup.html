@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+        <title>BeWell Sign Up</title>
+    </head>
+    <body>
+        <div class="intro">
+            <h1>BeWell</h1>
+            <p>Sign Up For An Account!</p>
+            <div class = "form_container">
+                <form method="POST" action="{{url_for('signup_post')}}">
+                    <label for="uname">Username:</label><br>
+                    <input type="text" id="uname" name="uname"><br>
+
+                    <label for="upassword">Password:</label><br>
+                    <input type="password" id="password" name="password"><br>
+
+                    <label for="name">Name</label><br>
+                    <input type="text" id="ucity" name="ucity"><br>
+
+                    <label for="uemail">Email:</label><br>
+                    <input type="text" id="uemail" name="uemail"><br>
+
+
+                    <input type="submit" value="Sign Up">
+                </form>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endwith %}
+            </div>
+                <!-- Button to login on signup page -->
+                <a href=/login><button type=”button”>Log In</button></a> 
+        </div>
+    </body>
+</html>
