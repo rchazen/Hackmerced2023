@@ -27,12 +27,12 @@ with app.app_context():
     login_manager.login_view = 'logIn'
     login_manager.init_app(app)
 
-    class Customer(db.Model):
+    class Customer(db.Model, UserMixin):
         c_custKey         = db.Column(db.Integer, primary_key = True)
+        c_custUsername     = db.Column(db.String, unique = True, nullable = False)
         c_custName        = db.Column(db.String, unique = False, nullable = False)
         c_custEmail       = db.Column(db.String, unique = False, nullable = True)
-        c_custPhoneNumber = db.Column(db.String, unique = False, nullable = True)
-        c_custComment = db.Column(db.String, unique = False, nullable = True)
+        c_custPass        = db.Column(db.String, unique = False, nullable = False)
 
         # Adds a new user to database
         def addCustomer(c_custName, c_custEmail, c_custPhoneNumber, c_custComment):
@@ -66,14 +66,14 @@ def login_post():
     password = request.form.get('password')
     
     #get user information
-    user = Customer.query.filter_by(c_custUser=username).first()
+    user = Customer.query.filter_by(c_custUsername=username).first()
 
 
     #check if user exists
     #print(user.c_custKey)
-    print(user.c_custUser)
+    print(user.c_custUsername)
     
-    if not user.c_custUser:
+    if not user.c_custUsername:
         flash('Please check your login details and try again.')
         return redirect(url_for('logIn'))
     if bcrypt.checkpw(password.encode('utf-8'), user.c_custPass):
@@ -92,7 +92,7 @@ def logOut():
 @login_required
 def home_menu():
     user = Customer.query.filter_by(c_custKey=current_user.c_custKey).first()
-    return render_template('home.html', person = user)
+    return render_template('home.html')
 
 
 # Sign Up Method
@@ -109,7 +109,7 @@ def signup_post():
 
     if username and password and name and email:
         # Checks if user already exists, if so, don't allow them to register with same name
-        if Customer.query.filter_by(c_custUser = username).first():
+        if Customer.query.filter_by(c_custUsername = username).first():
             flash('Username already being used: login or use a different name')
             return render_template('signup.html')
         
@@ -126,10 +126,10 @@ def signup_post():
     if username and password and name and email:
         password_hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         # Admin status defaults to 0
-        db.session.add(Customer(c_custUser = username, c_custPass = password_hashed, c_custCity = city, c_custNation = nation, c_custEmail = email, c_custPhoneNumber = phone, c_custAdminStatus = False))
+        db.session.add(Customer(c_custUsername = username,  c_custName = name,c_custEmail = email, c_custPass = password_hashed))
         db.session.commit()
         flash('Successfully Signed Up!')
-        return redirect(url_for('home_menu'))
+        return redirect(url_for('home'))
     else:
         flash('Fill in the form')
         return render_template('signup.html')

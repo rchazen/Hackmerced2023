@@ -17,7 +17,7 @@
         <input type="text" id="uname" name="uname"><br>
         <label for="uname">Password:</label><br>
         <input type="password" id="password" name="password"><br>
-        <a href=/signup><button type=”button”>Sign Up</button></a> 
+        <a href= "{{url_for('signUp')}}"> Sign Up</a>
         <input type="submit" value="Log In">
     </form>
     {% with messages = get_flashed_messages() %}
