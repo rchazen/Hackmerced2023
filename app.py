@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, jsonify
 from flask import request, flash
 from flask import abort, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 import bcrypt
 import json
 # from sqlalchemy import text
@@ -49,9 +50,9 @@ with app.app_context():
     class Posts(db.Model):
         p_postKey = db.Column(db.Integer, primary_key = True)
         p_custName     = db.Column(db.String, unique = False, nullable = False)
-        p_postEmoji     = db.Column(db.BLOB, unique = False, nullable = False)
+        p_postEmoji     = db.Column(db.String, unique = False, nullable = False)
         p_postComment   = db.Column(db.String, unique = False, nullable = False)
-
+        p_postTime = db.Column(db.DateTime(timezone = True), server_default = func.now())
 
     db.create_all()
 
@@ -93,6 +94,22 @@ def logOut():
 def home_menu():
     user = Customer.query.filter_by(c_custKey=current_user.c_custKey).first()
     return render_template('home.html')
+
+@app.route('/homepost', methods=["POST"])
+@login_required
+def home_post():
+    user = Customer.query.filter_by(c_custKey=current_user.c_custKey).first()
+
+    postcomment = request.form['feeling']
+    db.session.add(Posts(p_custName = user.c_custName, p_postComment =postcomment , p_postEmoji = "lol"))
+    db.session.commit()
+    return redirect(url_for('mainFeed'))
+
+@app.route('/mainfeed')
+@login_required
+def mainFeed():
+    user = Customer.query.filter_by(c_custKey=current_user.c_custKey).first()
+    return render_template('mainfeed.html')
 
 
 # Sign Up Method

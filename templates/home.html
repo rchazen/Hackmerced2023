@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <title>BeWell</title>
+
+</head>  
+
+<body>
+    <h1>BeWell</h1>
+    <form  method="POST" action="{{url_for('home_post')}}">
+        <label for="feeling"></label>
+        <input type="text" id="feeling" name="feeling"> 
+        <input type="submit" value="Post">
+    </form>
+</body>
